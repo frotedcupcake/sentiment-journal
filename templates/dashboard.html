@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sentiment Analytics Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('home') }}">Sentiment Journal</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('entries') }}">Entries</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li class="nav-item"><span class="nav-link text-light">Hi, {{ current_user.username }}</span></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <h2>Sentiment Trend Dashboard</h2>
+  <div id="sentiment-chart"></div>
+</div>
+
+<script>
+  const days = {{ days|tojson }};
+  const trendData = {{ trend_data|safe }};
+
+  const traces = ['Positive', 'Neutral', 'Negative'].map(sentiment => ({
+    x: days,
+    y: trendData[sentiment],
+    mode: 'lines+markers',
+    name: sentiment,
+    line: {
+      shape: 'spline',
+      smoothing: 1.3,
+      width: 3
+    },
+    marker: { size: 8 }
+  }));
+
+  const layout = {
+    title: 'Sentiment Over Time',
+    xaxis: { title: 'Date' },
+    yaxis: { title: 'Number of Entries', rangemode: 'nonnegative', dtick: 1 },
+    legend: { orientation: 'h' },
+    margin: { t: 40, b: 40 }
+  };
+
+  Plotly.newPlot('sentiment-chart', traces, layout, {responsive: true});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

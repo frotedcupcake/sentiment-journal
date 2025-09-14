@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mood Trend</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css">
+</head>
+<body class="container my-5">
+    <h2>Mood Trend</h2>
+    <a href="{{ url_for('home') }}" class="btn btn-outline-primary mb-3">← Back</a>
+    <img src="{{ url_for('trend') }}" class="img-fluid border shadow">
+</body>
+</html>

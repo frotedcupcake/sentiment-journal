@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sentiment Analyzer Journal - Home</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('home') }}">Sentiment Journal</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('entries') }}">Entries</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('trend') }}">Mood Trend</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li class="nav-item"><span class="nav-link text-light">Hi, {{ current_user.username }}</span></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <h2 class="mb-4">Write Your Journal Entry</h2>
+  <form action="/" method="post">
+    <div class="mb-3">
+      <label for="entry" class="form-label">Your Entry</label>
+      <textarea name="entry" id="entry" class="form-control" required rows="5"
+                placeholder="How was your day?">{{ entry or '' }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="tags" class="form-label">Tags (comma separated)</label>
+      <input type="text" id="tags" name="tags" class="form-control"
+             placeholder="work, health, study" value="{{ tags or '' }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Analyze &amp; Save</button>
+  </form>
+
+  {% if sentiment and emoji %}
+    {% set alert_class = 'info' %}
+    {% if sentiment == 'Positive' %}
+      {% set alert_class = 'success' %}
+    {% elif sentiment == 'Negative' %}
+      {% set alert_class = 'danger' %}
+    {% elif sentiment == 'Neutral' %}
+      {% set alert_class = 'secondary' %}
+    {% endif %}
+    <div class="alert alert-{{ alert_class }} mt-4 fw-bold fs-5">
+      Sentiment: {{ sentiment }} {{ emoji }}
+    </div>
+  {% endif %}
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
